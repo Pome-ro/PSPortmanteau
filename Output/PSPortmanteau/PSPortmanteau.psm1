@@ -41,7 +41,7 @@ function Birthday {
     end {
     }
 }
-function Devider {
+function Divider {
     [CmdletBinding()]
     param (
         # Length
