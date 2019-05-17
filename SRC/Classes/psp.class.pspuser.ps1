@@ -13,4 +13,9 @@ class PSPUser {
         $this.LastName = $LastName
         $this.DOB = $DOB
     }
+
+    #Set Username
+    SetUsername ([string]$username) {
+        $this.SamAccountName = $username
+    }
 }
