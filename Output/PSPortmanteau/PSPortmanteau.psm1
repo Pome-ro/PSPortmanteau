@@ -13,6 +13,66 @@ class PSPUser {
         $this.LastName = $LastName
         $this.DOB = $DOB
     }
+
+    #Set Username
+    SetUsername ([string]$username) {
+        $this.SamAccountName = $username
+    }
+}
+function Birthday {
+    [CmdletBinding()]
+    param (
+        # Length
+        [Parameter(
+            Mandatory = $false,
+            Position = 0)]
+        [string]
+        $Format = "YYYY"
+    )
+
+    begin {
+    }
+
+    process {
+        $Date = $Script:User.DOB | Get-Date -Format $Format
+        $Script:Segments += $Date
+    }
+
+    end {
+    }
+}
+function Devider {
+    [CmdletBinding()]
+    param (
+        # Length
+        [Parameter(
+            Mandatory = $false,
+            Position = 0)]
+        [ValidateSet("Underscore", "Dot", "Dash")]
+        [string]
+        $Type = "Dot"
+    )
+
+    begin {
+    }
+
+    process {
+        switch ($Type) {
+            Underscore {
+                $Script:Segments += "_"
+            }
+            Dot {
+                $Script:Segments += "."
+            }
+            Dash {
+                $Script:Segments += "-"
+            }
+            Default { }
+        }
+    }
+
+    end {
+    }
 }
 function FirstName {
     [CmdletBinding()]
@@ -129,7 +189,7 @@ function Username {
         [Parameter(
             Mandatory = $true,
             Position = 0)]
-        [PSPUser]
+        [PSPUser[]]
         $PSPUser,
         # ScriptBlock
         [Parameter(
@@ -143,10 +203,14 @@ function Username {
     }
 
     process {
-        $Script:User = $PSPUser
-        $Script:Segments = @()
-        . $Script
-        Join-String $Script:Segments
+        foreach ($PUser in $PSPUser) {
+            $Script:User = $PUser
+            $Script:Segments = @()
+            . $Script
+            $Username = Join-String $Script:Segments
+            $PUser.SetUsername($Username)
+            $PUser
+        }
     }
 
     end {

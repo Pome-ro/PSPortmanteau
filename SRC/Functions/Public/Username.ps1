@@ -5,7 +5,7 @@ function Username {
         [Parameter(
             Mandatory = $true,
             Position = 0)]
-        [PSPUser]
+        [PSPUser[]]
         $PSPUser,
         # ScriptBlock
         [Parameter(
@@ -19,10 +19,14 @@ function Username {
     }
 
     process {
-        $Script:User = $PSPUser
-        $Script:Segments = @()
-        . $Script
-        Join-String $Script:Segments
+        foreach ($PUser in $PSPUser) {
+            $Script:User = $PUser
+            $Script:Segments = @()
+            . $Script
+            $Username = Join-String $Script:Segments
+            $PUser.SetUsername($Username)
+            $PUser
+        }
     }
 
     end {
