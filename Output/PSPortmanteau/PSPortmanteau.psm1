@@ -6,23 +6,29 @@ class PSPUser {
     [datetime]$DOB
     [String]$SamAccountName
     [String]$PlainTextPassword
+    [String]$ID
 
     #Constructor
-    PSPUser ([String]$FirstName, [String]$LastName, [String]$DOB) {
+    PSPUser ([String]$FirstName, [String]$LastName, [String]$DOB, [String]$ID) {
         $this.FirstName = $FirstName
         $this.LastName = $LastName
         $this.DOB = $DOB
+        $this.ID = $ID
     }
 
     #Set Username
     SetUsername ([string]$username) {
         $this.SamAccountName = $username
     }
+    
+    SetPlainTextPassword ([string]$PlainTextPassword) {
+        $this.PlainTextPassword = $PlainTextPassword
+    }
 }
 function Birthday {
     [CmdletBinding()]
     param (
-        # Length
+        # Date Format
         [Parameter(
             Mandatory = $false,
             Position = 0)]
@@ -44,7 +50,7 @@ function Birthday {
 function Divider {
     [CmdletBinding()]
     param (
-        # Length
+        # Sperator Type
         [Parameter(
             Mandatory = $false,
             Position = 0)]
@@ -164,7 +170,11 @@ function New-PSPUserObject {
         # Middle Name
         [Parameter(Mandatory = $false)]
         [String]
-        $MiddleName
+        $MiddleName,
+        # ID
+        [Parameter(Mandatory = $false)]
+        [String]
+        $ID = $(New-Guid).GUID
     )
 
     begin {
@@ -172,7 +182,7 @@ function New-PSPUserObject {
     }
 
     process {
-        $PSPObject = [PSPUser]::New($Firstname, $LastName, $DOB)
+        $PSPObject = [PSPUser]::New($Firstname, $LastName, $DOB, $ID)
         if ($MiddleName -ne $null) {
             $PSPObject.MiddleName = $MiddleName
         }
@@ -182,6 +192,49 @@ function New-PSPUserObject {
     end {
     }
 }
+Function UserID {
+    [CmdletBinding()]
+    param (
+        # Length
+        [Parameter(
+            Mandatory = $false,
+            Position = 0)]
+        [Int32]
+        $Length = $Script:User.ID.Length,
+        # Direction of Snip, left to Right, or Right to Left
+        [Parameter(
+            Mandatory = $False, 
+            Position = 1)]
+        [String]
+        [ValidateSet('Left-Right','Right-Left')]
+        $Direction = 'Left-Right'
+       
+    )
+
+    begin {
+    }
+
+    process {
+        #Set Max Length of the Length field. 
+        $IDLength = $Script:User.ID.Length
+        $Length = if ($Length -ge $IDLength) { $IDLength } else { $Length }
+
+        #Take Snip of ID from either Left to Right or Right to Left
+        If($Direction -eq 'Left-Right'){
+            $IDSegment = $Script:User.ID.substring(0, $Length)
+        }
+        if($Direction -eq 'Right-Left'){
+            $NewLength = $IDLength - $Length
+            $IDSegment = $Script:User.ID.substring($NewLength,$Length )
+        }
+        
+        $Script:Segments += $IDSegment
+    }
+
+    end {
+    }
+}
+
 function Username {
     [CmdletBinding()]
     param (
@@ -207,7 +260,7 @@ function Username {
             $Script:User = $PUser
             $Script:Segments = @()
             . $Script
-            $Username = Join-String $Script:Segments
+            $Username = -join $Script:Segments
             $PUser.SetUsername($Username)
             $PUser
         }

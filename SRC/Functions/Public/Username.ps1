@@ -23,7 +23,7 @@ function Username {
             $Script:User = $PUser
             $Script:Segments = @()
             . $Script
-            $Username = Join-String $Script:Segments
+            $Username = -join $Script:Segments
             $PUser.SetUsername($Username)
             $PUser
         }

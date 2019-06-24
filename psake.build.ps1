@@ -43,6 +43,6 @@ task Build -depends Clean {
 }
 
 task Publish -depends Build, Test {
-    Publish-Module -Name $ModulePath -Repository "Mansfield Powershell Repo" -WhatIf
+    Publish-Module -Name $ModulePath -Repository "MPSPSRepo"
 }
 

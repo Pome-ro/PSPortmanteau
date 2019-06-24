@@ -1,7 +1,7 @@
 function Divider {
     [CmdletBinding()]
     param (
-        # Length
+        # Sperator Type
         [Parameter(
             Mandatory = $false,
             Position = 0)]

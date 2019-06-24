@@ -1,7 +1,7 @@
 function Birthday {
     [CmdletBinding()]
     param (
-        # Length
+        # Date Format
         [Parameter(
             Mandatory = $false,
             Position = 0)]

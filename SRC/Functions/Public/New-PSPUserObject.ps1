@@ -16,7 +16,11 @@ function New-PSPUserObject {
         # Middle Name
         [Parameter(Mandatory = $false)]
         [String]
-        $MiddleName
+        $MiddleName,
+        # ID
+        [Parameter(Mandatory = $false)]
+        [String]
+        $ID = $(New-Guid).GUID
     )
 
     begin {
@@ -24,7 +28,7 @@ function New-PSPUserObject {
     }
 
     process {
-        $PSPObject = [PSPUser]::New($Firstname, $LastName, $DOB)
+        $PSPObject = [PSPUser]::New($Firstname, $LastName, $DOB, $ID)
         if ($MiddleName -ne $null) {
             $PSPObject.MiddleName = $MiddleName
         }
