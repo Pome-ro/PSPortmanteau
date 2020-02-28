@@ -29,17 +29,34 @@ task Clean {
 }
 
 task Build -depends Clean {
-    Copy-Item -Path ".\SRC\PSPortmanteau.psd1" -Destination $ModulePath
-    Copy-Item -Path ".\SRC\PSPortmanteau.psm1" -Destination $ModulePath
-    $PSPUserClass = Get-Content -Path ".\SRC\Classes\psp.class.pspuser.ps1"
-    $PSPPublicFunctions = Get-ChildItem ".\SRC\Functions\Public"
-    $PSPPrivetFunctions = Get-ChildItem ".\SRC\Functions\Privet"
-    Add-Content -Path "$ModulePath\PSPortmanteau.psm1" -Value $PSPUserClass
-    foreach ($PublicFuntion in $PSPPublicFunctions) {
-        $Content = Get-Content -Path $PublicFuntion.FullName
-        Add-Content -Value $content -Path "$ModulePath\PSPortmanteau.psm1"
+    
+    $PrivateFunctions = Get-ChildItem ".\SRC\Functions\Private"
+    $PublicFunctions = Get-ChildItem ".\SRC\Functions\Public"
+    $Classes = Get-ChildItem ".\SRC\Classes\"
+    $FunctionsToExport = $PublicFunctions.BaseName
+
+    Update-ModuleManifest -Path ".\SRC\$ModuleName.psd1" -FunctionsToExport $FunctionsToExport
+
+    Copy-Item -Path ".\SRC\$ModuleName.psd1" -Destination $ModulePath
+    Copy-Item -Path ".\SRC\$ModuleName.psm1" -Destination $ModulePath
+    
+    # Export Classes
+    foreach ($Class in $Classes) {
+        $Content = Get-Content -Path $Class.FullName
+        Add-Content -Value $content -Path "$ModulePath\$ModuleName.psm1"
     }
-    Add-Content -Value "Export-ModuleMember -Function *" -Path "$ModulePath\PSPortmanteau.psm1"
+    
+    # Export Private Functions
+    foreach ($PrivateFunction in $PrivateFunctions) {
+        $Content = Get-Content -Path $PrivateFunction.FullName
+        Add-Content -Value $content -Path "$ModulePath\$ModuleName.psm1"
+    }
+
+    # Export Public Functions
+    foreach ($PublicFuntion in $PublicFunctions) {
+        $Content = Get-Content -Path $PublicFuntion.FullName
+        Add-Content -Value $content -Path "$ModulePath\$ModuleName.psm1"
+    }
 }
 
 task Publish -depends Build, Test {

@@ -6,14 +6,15 @@ class PSPUser {
     [datetime]$DOB
     [String]$SamAccountName
     [String]$PlainTextPassword
-    [String]$ID
+    [String]$UserID
+    [String]$UserPrincipalName
 
     #Constructor
-    PSPUser ([String]$FirstName, [String]$LastName, [String]$DOB, [String]$ID) {
+    PSPUser ([String]$FirstName, [String]$LastName, [String]$DOB, [String]$UserID) {
         $this.FirstName = $FirstName
         $this.LastName = $LastName
         $this.DOB = $DOB
-        $this.ID = $ID
+        $this.UserID = $UserID
     }
 
     #Set Username

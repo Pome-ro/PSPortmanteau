@@ -20,7 +20,7 @@ function New-PSPUserObject {
         # ID
         [Parameter(Mandatory = $false)]
         [String]
-        $ID = $(New-Guid).GUID
+        $UserID = $(New-Guid).GUID
     )
 
     begin {
@@ -28,7 +28,7 @@ function New-PSPUserObject {
     }
 
     process {
-        $PSPObject = [PSPUser]::New($Firstname, $LastName, $DOB, $ID)
+        $PSPObject = [PSPUser]::New($Firstname, $LastName, $DOB, $UserID)
         if ($MiddleName -ne $null) {
             $PSPObject.MiddleName = $MiddleName
         }

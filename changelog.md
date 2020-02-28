@@ -1,4 +1,14 @@
 # 📃 PSPortmanteau Change Log
+
+## v0.1.3 2020-08-24
+* Major DSL syntax overhall, moved to more genaric term for creating new strings called "Generate"
+    * Generate operates just like Username did in the past, however, it will have many flags in wihich you can call that allows you to generate and fill some fields in the PSPUser object type
+        * Two flags exist currently, Username and Password
+        * Username operates like the previous Username cmd did, filling in the "SamAccountName" field with the generated string on completion
+        * Password allows you to populate the "PasswordAsPlainText" field within the PSPUser object. 
+    * Added a "Random Character" command RandomChar allowing you to generate strings of random characters. 
+        * Has three switches: -Numeric, -Alpha, and -Symbol. Use each one to add more characters to the viable random posibilites. 
+    * This version is very close to being production ready. I'll have to test it by generating a spreadsheet of Usernames and Passwords using real data. 
 ## v0.1.2 2019-06-24
 * Added the UserID Segment and Class Field
     * the UuserID is required when creating a PSPUser object

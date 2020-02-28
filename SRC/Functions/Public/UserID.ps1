@@ -13,7 +13,13 @@ Function UserID {
             Position = 1)]
         [String]
         [ValidateSet('Left-Right','Right-Left')]
-        $Direction = 'Left-Right'
+        $Direction = 'Left-Right',
+        # toLower
+        [Parameter(
+            Mandatory = $false,
+            Position = 2)]
+        [Switch]
+        $toLower
        
     )
 
@@ -21,20 +27,36 @@ Function UserID {
     }
 
     process {
+        if($Null -ne $Overide){
+            if ($Overide.Function -eq 'UserID'){
+                if ($overide.Action -eq 'Trim'){
+                    $Length = $Length - $Overide.Value
+                }
+                if($overide.Action -eq 'Expand'){
+                    $Length = $Length + $Overide.Value
+                }
+            }
+        }
         #Set Max Length of the Length field. 
-        $IDLength = $Script:User.ID.Length
+        $IDLength = $Script:User.UserID.Length
         $Length = if ($Length -ge $IDLength) { $IDLength } else { $Length }
 
         #Take Snip of ID from either Left to Right or Right to Left
         If($Direction -eq 'Left-Right'){
-            $IDSegment = $Script:User.ID.substring(0, $Length)
+            $IDSegment = $Script:User.UserID.substring(0, $Length)
         }
         if($Direction -eq 'Right-Left'){
             $NewLength = $IDLength - $Length
-            $IDSegment = $Script:User.ID.substring($NewLength,$Length )
+            $IDSegment = $Script:User.UserID.substring($NewLength,$Length )
         }
         
         $Script:Segments += $IDSegment
+
+        if ($toLower) {
+            $Script:Segments += $IDSegment.toLower()
+        }  else {
+            $Script:Segments += $IDSegment
+        }
     }
 
     end {

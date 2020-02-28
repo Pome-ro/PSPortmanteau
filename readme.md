@@ -8,20 +8,36 @@ To be used as part of a configuration step for a larger automation tool, managin
 ```powershell
 $User = New-PSPUser -FirstName "Raphael" -LastName "Wiggum" -MiddleName "John" -DOB 11/18/1981
 
-Username $User {
+Generate -UserName $User {
     LastName
     FirstName 1
     MiddleName 1
     Birthday yy
 }
-output: WiggumRJ`\
+output:
+FirstName         : Ralphael
+LastName          : Wiggum
+MiddleName        : John
+DOB               : 11/18/1981 12:00:00 AM
+SamAccountName    : WiggumRJ81
+PlainTextPassword : 11181985tp
+UserID            : 123456789
 
-Username $User {
+
+
+Generate -UserName $User {
     FirstName
     Divider "Dot"
     LastName
 }
-output: Raphael.Wiggum
+output:
+FirstName         : Ralphael
+LastName          : Wiggum
+MiddleName        : John
+DOB               : 11/18/1981 12:00:00 AM
+SamAccountName    : Ralphael.Wiggum
+PlainTextPassword : 11181985tp
+UserID            : 123456789
 ```
 More examples in the [Examples dir](.\Examples).
 
