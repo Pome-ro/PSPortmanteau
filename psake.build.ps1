@@ -4,7 +4,31 @@ properties {
     $ModulePath = Join-Path -Path $OutputPath -ChildPath $ModuleName
 }
 
-task default -depends clean, build, test
+task default -depends structure, clean, build, test
+
+task Structure {
+    $SRC = Get-ChildItem .\SRC
+    $hasClasses = $SRC | Where-Object {$_.Name -eq "Classes"}
+    $hasFunctions = $SRC | Where-Object {$_.Name -eq "Functions"}
+
+    If($hasClasses -eq $Null){
+        New-Item -Path .\SRC -ItemType Directory -Name "Classes" | Out-Null
+    }
+    If($hasFunctions -eq $Null){
+        New-Item -Path .\SRC -ItemType Directory -Name "Functions" | Out-Null
+    }
+    $dirFunctions = Get-ChildItem .\SRC\Functions
+    $hasPublic = $dirFunctions | Where-Object {$_.Name -eq "Public"}
+    $hasPrivate = $dirFunctions | Where-Object {$_.Name -eq "Private"}
+   
+    If($hasPublic -eq $Null){
+        New-Item -Path .\SRC\Functions -ItemType Directory -Name "Public" | Out-Null
+    }
+    If($hasPrivate -eq $Null){
+        New-Item -Path .\SRC\Functions -ItemType Directory -Name "Private" | Out-Null
+    }
+
+}
 
 task Test {
     Import-Module $ModulePath
@@ -28,7 +52,7 @@ task Clean {
 
 }
 
-task Build -depends Clean {
+task Build -depends Structure, Clean {
     
     $PrivateFunctions = Get-ChildItem ".\SRC\Functions\Private"
     $PublicFunctions = Get-ChildItem ".\SRC\Functions\Public"

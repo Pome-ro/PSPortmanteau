@@ -74,7 +74,6 @@ function Generate {
             ##############################
             if( $Username -eq $True){
                 If ($MaxLength -ne 0) {
-                    Write-Host "You shouldnt be seeing this text"
                     $Overide = @{
                         Function = $Trim
                         Action = "Trim"

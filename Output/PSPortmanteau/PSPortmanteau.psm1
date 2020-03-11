@@ -204,7 +204,6 @@ function Generate {
             ##############################
             if( $Username -eq $True){
                 If ($MaxLength -ne 0) {
-                    Write-Host "You shouldnt be seeing this text"
                     $Overide = @{
                         Function = $Trim
                         Action = "Trim"
@@ -429,6 +428,28 @@ function RandomChar {
         $CharString = -join $CharacterSet
 
         $Script:Segments += $CharString 
+    }
+
+    end {
+    }
+}
+function RawText {
+    [CmdletBinding()]
+    param (
+        # Sperator Type
+        [Parameter(
+            Mandatory = $false,
+            Position = 0)]
+        [string]
+        $text
+    )
+
+    begin {
+    }
+
+    process {
+        $Script:Segments += $text
+        
     }
 
     end {
